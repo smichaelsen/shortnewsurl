@@ -1,0 +1,2 @@
+config.tx_extbase.objects.Tx_News_Controller_NewsController.className = Tx_Shortnewsurl_Controller_NewsController
+plugin.tx_news.settings.link.skipControllerAndAction = 1
