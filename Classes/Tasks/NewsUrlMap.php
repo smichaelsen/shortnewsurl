@@ -34,9 +34,14 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 			t3lib_FlashMessageQueue::addMessage(new t3lib_FlashMessage('No news records were found.', 'Map was not created', t3lib_FlashMessage::WARNING));
 			return TRUE;
 		}
+		$lines = array();
+		foreach($items as $item) {
+			$lines[] = join(';', $item);
+		}
+		$content = join("\n", $lines);
 		$outputFilePath = PATH_site . 'typo3temp/urlmap.csv';
 		$fh = fopen($outputFilePath, 'w');
-		fputcsv($fh, $items);
+		fwrite($fh, $content);
 		fclose($fh);
 		t3lib_FlashMessageQueue::addMessage(new t3lib_FlashMessage('<a href="/typo3temp/urlmap.csv" target="_blank">Download map</a> containing ' . count($items) . ' records.', 'Url map created', t3lib_FlashMessage::OK));
 		return TRUE;
