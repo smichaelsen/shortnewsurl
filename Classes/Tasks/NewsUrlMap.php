@@ -26,8 +26,10 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 			return TRUE;
 		}
 		$items = array();
+		$lastItem = array();
 		while($item = $databaseConnection->sql_fetch_assoc($res)) {
 			$item['url'] = tx_pagepath_api::getPagePath($item['single_pid'], array('tx_ttnews' => array('tt_news' => intval($item['uid']))));
+			$lastItem = $item;
 			$items[] = $item;
 		}
 		if (count($items) == 0) {
@@ -43,7 +45,7 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 		$fh = fopen($outputFilePath, 'w');
 		fwrite($fh, $content);
 		fclose($fh);
-		t3lib_FlashMessageQueue::addMessage(new t3lib_FlashMessage('<a href="/typo3temp/urlmap.csv" target="_blank">Download map</a> containing ' . count($items) . ' records.', 'Url map created', t3lib_FlashMessage::OK));
+		t3lib_FlashMessageQueue::addMessage(new t3lib_FlashMessage('<a href="/typo3temp/urlmap.csv" target="_blank">Download map</a> containing ' . count($items) . ' records. Sample: ' . print_r($lastItem, 1), 'Url map created', t3lib_FlashMessage::OK));
 		return TRUE;
 	}
 
