@@ -15,13 +15,14 @@ $EM_CONF[$_EXTKEY] = array(
 	'version' => '0.0.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.7',
+			'typo3' => '4.4',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
 			'news' => '2.1',
 			'realurl' => '1.12.6',
+			'pagepath' => '0.0.0',
 		),
 	),
 );

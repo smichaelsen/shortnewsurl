@@ -1,5 +1,6 @@
 <?php
 
+require_once(t3lib_extMgm::extPath('scheduler') . 'class.tx_scheduler_task.php');
 class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 
 	/**
@@ -17,8 +18,13 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 			'tt_news',
 			'tt_news_cat_mm',
 			'tt_news_cat',
-			'tt_news.deleted = 0'
+			' AND tt_news.deleted = 0'
 		);
+		$sqlError = $databaseConnection->sql_error();
+		if ($sqlError) {
+			t3lib_FlashMessageQueue::addMessage(new t3lib_FlashMessage('SQL Error: ' . $sqlError, 'Error. Map was not created', t3lib_FlashMessage::ERROR));
+			return TRUE;
+		}
 		$items = array();
 		while($item = $databaseConnection->sql_fetch_assoc($res)) {
 			$item['url'] = tx_pagepath_api::getPagePath($item['single_pid'], array('tt_news' => array('uid' =>intval($item['uid']))));
