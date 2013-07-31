@@ -14,11 +14,14 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 		/** @var t3lib_DB $databaseConnection */
 		$databaseConnection = $GLOBALS['TYPO3_DB'];
 		$res = $databaseConnection->exec_SELECT_mm_query(
-			'tt_news.uid, tt_news_cat.single_pid',
-			'tt_news',
-			'tt_news_cat_mm',
-			'tt_news_cat',
-			' AND tt_news.deleted = 0'
+			'tx_news_domain_model_news.*, tx_news_domain_model_category.single_pid',
+			'tx_news_domain_model_news',
+			'tx_news_domain_model_news_category_mm',
+			'tx_news_domain_model_category',
+			' AND tx_news_domain_model_news.deleted = 0',
+			'',
+			'',
+			'100'
 		);
 		$sqlError = $databaseConnection->sql_error();
 		if ($sqlError) {
@@ -26,9 +29,18 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 			return TRUE;
 		}
 		$items = array();
+		$items[] = array(
+			'uid', 'import_id', 'single_pid', 'title', 'url'
+		);
 		$lastItem = array();
-		while($item = $databaseConnection->sql_fetch_assoc($res)) {
-			$item['url'] = tx_pagepath_api::getPagePath($item['single_pid'], array('tx_ttnews' => array('tt_news' => intval($item['uid']))));
+		while($record = $databaseConnection->sql_fetch_assoc($res)) {
+			$item = array(
+				'uid' => $record['uid'],
+				'import_id' => $record['import_id'],
+				'single_pid' => $record['single_pid'],
+				'title' => $record['title'],
+				'url' => tx_pagepath_api::getPagePath($record['single_pid'], array('tx_news_pi1' => array('news' => intval($record['uid']))))
+			);
 			$lastItem = $item;
 			$items[] = $item;
 		}
