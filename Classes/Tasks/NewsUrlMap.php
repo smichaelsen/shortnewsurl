@@ -29,16 +29,10 @@ class Tx_Shortnewsurl_Tasks_NewsUrlMap extends tx_scheduler_Task {
 			return TRUE;
 		}
 		$items = array();
-		$items[] = array(
-			'uid', 'import_id', 'single_pid', 'title', 'url'
-		);
 		$lastItem = array();
 		while($record = $databaseConnection->sql_fetch_assoc($res)) {
 			$item = array(
-				'uid' => $record['uid'],
 				'import_id' => $record['import_id'],
-				'single_pid' => $record['single_pid'],
-				'title' => $record['title'],
 				'url' => tx_pagepath_api::getPagePath($record['single_pid'], array('tx_news_pi1' => array('news' => intval($record['uid']))))
 			);
 			$lastItem = $item;
